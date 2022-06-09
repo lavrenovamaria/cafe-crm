@@ -12,7 +12,6 @@ fun menuItemEntity(
     price: Long = 69900,
     image: String = "https://picsum.photos/id/12/300/300"
 ) = MenuItemEntity(
-    id = id,
     name = name,
     category = category,
     ingredients = ingredients,
@@ -20,4 +19,6 @@ fun menuItemEntity(
     weight = weight,
     price = price,
     image = image
-)
+).apply {
+    this.id = id
+}

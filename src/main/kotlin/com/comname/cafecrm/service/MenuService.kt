@@ -9,6 +9,6 @@ class MenuService(
     private val menuItemRepository: MenuItemRepository
 ) {
 
-    fun getMenu() = menuItemRepository.getAll().map { it.toModel() }
+    fun getMenu() = menuItemRepository.getAllBy().map { it.toModel() }
 
 }

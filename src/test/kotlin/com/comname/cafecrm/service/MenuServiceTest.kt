@@ -22,7 +22,7 @@ class MenuServiceTest : BaseServiceTest() {
     fun `getMenu - happy path`() {
         val menuItemList = listOf(menuItemEntity(), menuItemEntity())
 
-        whenever(menuItemRepository.getAll()).thenReturn(menuItemList)
+        whenever(menuItemRepository.getAllBy()).thenReturn(menuItemList)
 
         val result = menuService.getMenu()
 

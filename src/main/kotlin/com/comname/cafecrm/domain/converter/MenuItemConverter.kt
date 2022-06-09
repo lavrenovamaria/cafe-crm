@@ -18,14 +18,14 @@ fun MenuItemDto.toModel() =
 
 fun MenuItemEntity.toModel() =
     MenuItem(
-        id = id,
-        name = name,
-        category = category,
-        ingredients = ingredients,
-        isAvailable = isAvailable,
-        weight = weight,
-        price = price,
-        image = image
+        id = id ?: error("id must be defined"),
+        name = name ?: error("name must be defined"),
+        category = category ?: error("category must be defined"),
+        ingredients = ingredients ?: error("ingredients must be defined"),
+        isAvailable = isAvailable ?: error("isAvailable must be defined"),
+        weight = weight ?: error("weight must be defined"),
+        price = price ?: error("price must be defined"),
+        image = image ?: error("image must be defined")
     )
 
 fun MenuItem.toDto() =
