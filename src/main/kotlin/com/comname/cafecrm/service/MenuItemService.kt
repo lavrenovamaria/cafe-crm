@@ -30,6 +30,9 @@ class MenuItemService(
             ?.merge(menuItem)?.toModel() ?: throw EntityNotFoundException(MenuItemEntity::class, id)
 
     fun delete(id: Long) = menuItemRepository.findByIdOrNull(id)
-        .also { menuItemRepository.deleteById(id) } ?: throw EntityNotFoundException(MenuItemEntity::class, id)
+        .let { entity ->
+            entity ?: throw EntityNotFoundException(MenuItemEntity::class, id)
+            menuItemRepository.deleteById(id)
+        }
 
 }

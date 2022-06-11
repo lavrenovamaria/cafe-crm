@@ -16,7 +16,7 @@ class MenuItemController(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Create MenuItem")
+    @Operation(summary = "Create empty MenuItem")
     fun create() = menuItemService.create().toDto()
 
     @GetMapping("/{id}")

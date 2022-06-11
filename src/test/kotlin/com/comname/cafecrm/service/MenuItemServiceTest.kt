@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.kotlin.any
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
@@ -158,6 +159,7 @@ class MenuItemServiceTest : BaseServiceTest() {
 
         menuItemService.delete(id)
 
+        verify(menuItemRepository).findById(id)
         verify(menuItemRepository).deleteById(id)
     }
 
@@ -168,7 +170,8 @@ class MenuItemServiceTest : BaseServiceTest() {
 
         assertThrows<EntityNotFoundException> { menuItemService.delete(id) }
 
-        verify(menuItemRepository).deleteById(id)
+        verify(menuItemRepository).findById(id)
+        verify(menuItemRepository, times(0)).deleteById(id)
     }
 
 }
