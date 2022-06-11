@@ -14,7 +14,6 @@ class MenuItemController(
     private val menuItemService: MenuItemService
 ) {
 
-    //TODO add global exception handler
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create MenuItem")
