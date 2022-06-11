@@ -9,11 +9,12 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("menu-item")
+@RequestMapping("menu-items")
 class MenuItemController(
     private val menuItemService: MenuItemService
 ) {
 
+    //TODO add global exception handler
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create MenuItem")
@@ -22,6 +23,10 @@ class MenuItemController(
     @GetMapping("/{id}")
     @Operation(summary = "Get MenuItem by ID")
     fun get(@PathVariable("id") id: Long) = menuItemService.get(id).toDto()
+
+    @GetMapping
+    @Operation(summary = "Get all persisted MenuItems")
+    fun getMenu() = menuItemService.getAll().map { it.toDto() }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Update MenuItem")

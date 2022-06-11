@@ -23,8 +23,6 @@ class MenuItemControllerTest : BaseControllerTest() {
     @MockBean
     private lateinit var menuItemService: MenuItemService
 
-    //TODO: not found cases
-
     @Test
     fun `create - happy path`() {
         val id = 3L
@@ -32,7 +30,7 @@ class MenuItemControllerTest : BaseControllerTest() {
         whenever(menuItemService.create()).thenReturn(id)
 
         val result = objectMapper.readValue<IdDto>(
-            mockMvc.perform(MockMvcRequestBuilders.post("/menu-item"))
+            mockMvc.perform(MockMvcRequestBuilders.post("/menu-items"))
                 .andExpect(MockMvcResultMatchers.status().isCreated)
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn().response.contentAsByteArray
@@ -50,7 +48,7 @@ class MenuItemControllerTest : BaseControllerTest() {
         whenever(menuItemService.get(id)).thenReturn(menuItem)
 
         val result = objectMapper.readValue<MenuItemDto>(
-            mockMvc.perform(MockMvcRequestBuilders.get("/menu-item/$id"))
+            mockMvc.perform(MockMvcRequestBuilders.get("/menu-items/$id"))
                 .andExpect(MockMvcResultMatchers.status().isOk)
                 .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn().response.contentAsByteArray
@@ -58,6 +56,22 @@ class MenuItemControllerTest : BaseControllerTest() {
 
         assertEquals(menuItem.toDto(), result)
         verify(menuItemService).get(id)
+    }
+
+    @Test
+    fun `getMenu - happy path`() {
+        val menuItemList = listOf(menuItem(), menuItem())
+
+        whenever(menuItemService.getAll()).thenReturn(menuItemList)
+
+        val result = objectMapper.readValue<List<MenuItemDto>>(
+            mockMvc.perform(MockMvcRequestBuilders.get("/menu-items"))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn().response.contentAsByteArray
+        )
+
+        assertEquals(menuItemList.map { it.toDto() }, result)
     }
 
     @Test
@@ -70,7 +84,7 @@ class MenuItemControllerTest : BaseControllerTest() {
 
         val result = objectMapper.readValue<MenuItemDto>(
             mockMvc.perform(
-                MockMvcRequestBuilders.patch("/menu-item/$id")
+                MockMvcRequestBuilders.patch("/menu-items/$id")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsBytes(menuItem.toDto()))
             )
@@ -87,7 +101,7 @@ class MenuItemControllerTest : BaseControllerTest() {
     fun `delete - happy path`() {
         val id = 3L
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/menu-item/$id"))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/menu-items/$id"))
             .andExpect(MockMvcResultMatchers.status().isNoContent)
 
         verify(menuItemService).delete(id)

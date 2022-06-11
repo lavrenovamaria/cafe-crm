@@ -3,6 +3,8 @@ package com.comname.cafecrm.service
 import com.comname.cafecrm.domain.converter.toModel
 import com.comname.cafecrm.domain.entity.MenuItemEntity
 import com.comname.cafecrm.domain.model.MenuItem
+import com.comname.cafecrm.exception.EntityNotFoundException
+import com.comname.cafecrm.exception.EntityNotPersistedException
 import com.comname.cafecrm.repository.MenuItemRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -14,16 +16,20 @@ class MenuItemService(
     private val menuItemRepository: MenuItemRepository
 ) {
 
-    //TODO: add not found exceptions
-    fun create() = menuItemRepository.save(MenuItemEntity()).id ?: error("Error while persisting MenuItem")
+    fun create() = menuItemRepository.save(MenuItemEntity()).id
+        ?: throw EntityNotPersistedException(MenuItemEntity::class)
 
-    fun get(id: Long) = menuItemRepository.findByIdOrNull(id)?.toModel() ?: error("MenuItem with id=$id not found")
+    fun get(id: Long) = menuItemRepository.findByIdOrNull(id)?.toModel()
+        ?: throw EntityNotFoundException(MenuItemEntity::class, id)
+
+    fun getAll() = menuItemRepository.getAllBy().map { it.toModel() }
 
     fun update(id: Long, menuItem: MenuItem) =
         menuItemRepository
             .findByIdOrNull(id)
-            ?.merge(menuItem)?.toModel() ?: error("MenuItem with id=$id not found")
+            ?.merge(menuItem)?.toModel() ?: throw EntityNotFoundException(MenuItemEntity::class, id)
 
-    fun delete(id: Long) = menuItemRepository.deleteById(id)
+    fun delete(id: Long) = menuItemRepository.findByIdOrNull(id)
+        .also { menuItemRepository.deleteById(id) } ?: throw EntityNotFoundException(MenuItemEntity::class, id)
 
 }
