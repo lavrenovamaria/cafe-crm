@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("menu-items")
+@RequestMapping("\${paths.api.prefix}/menu-items")
 class MenuItemController(
     private val menuItemService: MenuItemService
 ) {

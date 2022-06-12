@@ -12,4 +12,9 @@ abstract class BaseControllerTest : BaseTest() {
     @Autowired
     protected lateinit var objectMapper: ObjectMapper
 
+    //TODO Replace with PathProperties
+    companion object {
+        const val API_PREFIX = "/api/v1"
+    }
+
 }

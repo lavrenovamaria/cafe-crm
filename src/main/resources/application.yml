@@ -8,3 +8,8 @@ spring:
     password: password
   liquibase:
     enabled: true
+
+paths:
+  api:
+    version: 1
+    prefix: /api/v${paths.api.version}
