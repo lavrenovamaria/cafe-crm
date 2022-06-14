@@ -1,0 +1,127 @@
+{
+	"info": {
+		"_postman_id": "40272ae3-d5d9-4589-9f7f-9a47da0b51c9",
+		"name": "CafeCRM",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19369683"
+	},
+	"item": [
+		{
+			"name": "Get all MenuItems",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/menu-items",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"menu-items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create empty MenuItem",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/menu-items",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"menu-items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get MenuItem by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/menu-items/55",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"menu-items",
+						"55"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update MenuItem",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"string\",\n  \"category\": \"string\",\n  \"ingredients\": \"string\",\n  \"weight\": 0,\n  \"price\": 0,\n  \"image\": \"string\",\n  \"isAvailable\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/v1/menu-items/55",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"menu-items",
+						"55"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete MenuItem",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/v1/menu-items/32",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"menu-items",
+						"32"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
