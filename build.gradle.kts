@@ -18,7 +18,22 @@ repositories {
 }
 
 jib {
-    to.image = "514545285089.dkr.ecr.us-east-1.amazonaws.com/cafe-crm:latest"
+    from {
+        image = "bellsoft/liberica-openjdk-alpine:17"
+    }
+    to {
+        image = "apbogomazov/${rootProject.name}:latest"
+    }
+    container {
+        ports = listOf("8080", "18080")
+        user = "100"
+        entrypoint = listOf(
+            "sh", "-c", "./entry.sh"
+        )
+    }
+    extraDirectories {
+        permissions = mapOf(Pair("/entry.sh", "777"))
+    }
 }
 
 tasks.test {
@@ -35,11 +50,14 @@ jacoco {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+
+    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.liquibase:liquibase-core")
 
-    implementation("org.springdoc:springdoc-openapi-ui:1.6.8")
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.9")
     implementation("io.github.microutils:kotlin-logging-jvm:2.1.23")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")

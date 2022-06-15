@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class OpenAPIConfig {
+class OpenAPIConfiguration {
 
     companion object {
         const val TITLE = "CafeCRM API"

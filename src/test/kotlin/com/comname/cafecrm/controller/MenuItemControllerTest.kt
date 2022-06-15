@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
@@ -22,7 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(MenuItemController::class)
+@WebMvcTest(MenuItemController::class, excludeAutoConfiguration = [SecurityAutoConfiguration::class])
 class MenuItemControllerTest : BaseControllerTest() {
 
     @MockBean
@@ -35,7 +36,7 @@ class MenuItemControllerTest : BaseControllerTest() {
         whenever(menuItemService.create()).thenReturn(id)
 
         val result = objectMapper.readValue<IdDto>(
-            mockMvc.perform(post("/menu-items"))
+            mockMvc.perform(post("$API_PREFIX/menu-items"))
                 .andExpect(status().isCreated)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn().response.contentAsByteArray
@@ -52,7 +53,7 @@ class MenuItemControllerTest : BaseControllerTest() {
         whenever(menuItemService.create()).thenThrow(EntityNotPersistedException(MenuItemEntity::class))
 
         val result = objectMapper.readValue<ErrorInfo>(
-            mockMvc.perform(post("/menu-items"))
+            mockMvc.perform(post("$API_PREFIX/menu-items"))
                 .andExpect(status().isInternalServerError)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn().response.contentAsByteArray
@@ -70,7 +71,7 @@ class MenuItemControllerTest : BaseControllerTest() {
         whenever(menuItemService.get(id)).thenReturn(menuItem)
 
         val result = objectMapper.readValue<MenuItemDto>(
-            mockMvc.perform(get("/menu-items/$id"))
+            mockMvc.perform(get("$API_PREFIX/menu-items/$id"))
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn().response.contentAsByteArray
@@ -88,7 +89,7 @@ class MenuItemControllerTest : BaseControllerTest() {
         whenever(menuItemService.get(id)).thenThrow(EntityNotFoundException(MenuItemEntity::class, id))
 
         val result = objectMapper.readValue<ErrorInfo>(
-            mockMvc.perform(get("/menu-items/$id"))
+            mockMvc.perform(get("$API_PREFIX/menu-items/$id"))
                 .andExpect(status().isNotFound)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn().response.contentAsByteArray
@@ -106,7 +107,7 @@ class MenuItemControllerTest : BaseControllerTest() {
         whenever(menuItemService.getAll()).thenReturn(menuItemList)
 
         val result = objectMapper.readValue<List<MenuItemDto>>(
-            mockMvc.perform(get("/menu-items"))
+            mockMvc.perform(get("$API_PREFIX/menu-items"))
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn().response.contentAsByteArray
@@ -125,7 +126,7 @@ class MenuItemControllerTest : BaseControllerTest() {
 
         val result = objectMapper.readValue<MenuItemDto>(
             mockMvc.perform(
-                patch("/menu-items/$id")
+                patch("$API_PREFIX/menu-items/$id")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsBytes(menuItem.toDto()))
             )
@@ -148,7 +149,7 @@ class MenuItemControllerTest : BaseControllerTest() {
 
         val result = objectMapper.readValue<ErrorInfo>(
             mockMvc.perform(
-                patch("/menu-items/$id")
+                patch("$API_PREFIX/menu-items/$id")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsBytes(menuItem.toDto())))
                 .andExpect(status().isNotFound)
@@ -163,7 +164,7 @@ class MenuItemControllerTest : BaseControllerTest() {
     fun `delete - happy path`() {
         val id = 3L
 
-        mockMvc.perform(delete("/menu-items/$id"))
+        mockMvc.perform(delete("$API_PREFIX/menu-items/$id"))
             .andExpect(status().isNoContent)
 
         verify(menuItemService).delete(id)
@@ -177,7 +178,7 @@ class MenuItemControllerTest : BaseControllerTest() {
         whenever(menuItemService.delete(id)).thenThrow(EntityNotFoundException(MenuItemEntity::class, id))
 
         val result = objectMapper.readValue<ErrorInfo>(
-            mockMvc.perform(delete("/menu-items/$id"))
+            mockMvc.perform(delete("$API_PREFIX/menu-items/$id"))
                 .andExpect(status().isNotFound)
                 .andReturn().response.contentAsByteArray
         )
