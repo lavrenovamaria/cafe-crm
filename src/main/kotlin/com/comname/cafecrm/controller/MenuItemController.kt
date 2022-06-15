@@ -5,37 +5,25 @@ import com.comname.cafecrm.domain.converter.toModel
 import com.comname.cafecrm.domain.dto.MenuItemDto
 import com.comname.cafecrm.service.MenuItemService
 import io.swagger.v3.oas.annotations.Operation
-import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("\${paths.api.prefix}/menu-items")
 class MenuItemController(
     private val menuItemService: MenuItemService
-) {
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Create empty MenuItem")
-    fun create() = menuItemService.create().toDto()
-
-    @GetMapping("/{id}")
-    @Operation(summary = "Get MenuItem by ID")
-    fun get(@PathVariable("id") id: Long) = menuItemService.get(id).toDto()
+) : BaseCrudController<MenuItemDto> {
 
     @GetMapping
     @Operation(summary = "Get all persisted MenuItems")
     fun getMenu() = menuItemService.getAll().map { it.toDto() }
 
-    @PatchMapping("/{id}")
-    @Operation(summary = "Update MenuItem")
-    fun update(
-        @PathVariable("id") id: Long,
-        @RequestBody menuItemDto: MenuItemDto
-    ) = menuItemService.update(id, menuItemDto.toModel()).toDto()
+    override fun create() = menuItemService.create().toDto()
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Delete MenuItem by ID")
-    fun delete(@PathVariable("id") id: Long) = menuItemService.delete(id)
+    override fun get(id: Long) = menuItemService.get(id).toDto()
+
+    override fun update(id: Long, dto: MenuItemDto) = menuItemService.update(id, dto.toModel()).toDto()
+
+    override fun delete(id: Long) = menuItemService.delete(id)
 }
