@@ -1,8 +1,8 @@
 package com.comname.cafecrm.service
 
 import com.comname.cafecrm.BaseServiceTest
-import com.comname.cafecrm.domain.converter.toModel
 import com.comname.cafecrm.domain.entity.MenuItemEntity
+import com.comname.cafecrm.domain.entity.resolver.MenuItemEntityResolver
 import com.comname.cafecrm.domain.menuItem
 import com.comname.cafecrm.domain.menuItemEntity
 import com.comname.cafecrm.exception.EntityNotFoundException
@@ -17,12 +17,17 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
+@Transactional
 class MenuItemServiceTest : BaseServiceTest() {
 
     @Autowired
     private lateinit var menuItemService: MenuItemService
+
+    @Autowired
+    private lateinit var menuItemEntityResolver: MenuItemEntityResolver
 
     @MockBean
     private lateinit var menuItemRepository: MenuItemRepository
@@ -57,7 +62,7 @@ class MenuItemServiceTest : BaseServiceTest() {
 
         val result = menuItemService.get(id)
 
-        assertEquals(persistedEntity.toModel(), result)
+        assertEquals(persistedEntity.let { menuItemEntityResolver.toModel(it) }, result)
         verify(menuItemRepository).findById(id)
     }
 
@@ -73,14 +78,14 @@ class MenuItemServiceTest : BaseServiceTest() {
     }
 
     @Test
-    fun `getMenu - happy path`() {
+    fun `getAll - happy path`() {
         val menuItemList = listOf(menuItemEntity(), menuItemEntity())
 
         whenever(menuItemRepository.getAllBy()).thenReturn(menuItemList)
 
         val result = menuItemService.getAll()
 
-        assertEquals(menuItemList.map { it.toModel() }, result)
+        assertEquals(menuItemList.map { it.let { menuItemEntityResolver.toModel(it) } }, result)
     }
 
     @Test

@@ -1,9 +1,9 @@
 package com.comname.cafecrm.controller
 
 import com.comname.cafecrm.BaseControllerTest
-import com.comname.cafecrm.domain.converter.toDto
 import com.comname.cafecrm.domain.dto.IdDto
 import com.comname.cafecrm.domain.dto.MenuItemDto
+import com.comname.cafecrm.domain.dto.toDto
 import com.comname.cafecrm.domain.entity.MenuItemEntity
 import com.comname.cafecrm.domain.menuItem
 import com.comname.cafecrm.exception.EntityNotFoundException

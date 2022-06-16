@@ -1,8 +1,7 @@
 package com.comname.cafecrm.controller
 
-import com.comname.cafecrm.domain.converter.toDto
-import com.comname.cafecrm.domain.converter.toModel
 import com.comname.cafecrm.domain.dto.MenuItemDto
+import com.comname.cafecrm.domain.dto.toDto
 import com.comname.cafecrm.service.MenuItemService
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.web.bind.annotation.GetMapping
