@@ -1,5 +1,6 @@
 package com.comname.cafecrm.domain
 
+import com.comname.cafecrm.domain.model.CartItem
 import com.comname.cafecrm.domain.model.MenuItem
 
 fun menuItem(
@@ -20,4 +21,14 @@ fun menuItem(
     weight = weight,
     price = price,
     image = image
+)
+
+fun cartItem(
+    id: Long? = 110L,
+    menuItem: MenuItem? = menuItem(),
+    quantity: Long? = null
+) = CartItem(
+    id = id,
+    menuItem = menuItem,
+    quantity = quantity
 )

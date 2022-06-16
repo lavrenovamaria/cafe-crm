@@ -1,15 +1,15 @@
 package com.comname.cafecrm.controller
 
 import com.comname.cafecrm.BaseControllerTest
+import com.comname.cafecrm.domain.cartItem
+import com.comname.cafecrm.domain.dto.CartItemDto
 import com.comname.cafecrm.domain.dto.IdDto
-import com.comname.cafecrm.domain.dto.MenuItemDto
 import com.comname.cafecrm.domain.dto.toDto
-import com.comname.cafecrm.domain.entity.MenuItemEntity
-import com.comname.cafecrm.domain.menuItem
+import com.comname.cafecrm.domain.entity.CartItemEntity
 import com.comname.cafecrm.exception.EntityNotFoundException
 import com.comname.cafecrm.exception.EntityNotPersistedException
 import com.comname.cafecrm.exception.ErrorInfo
-import com.comname.cafecrm.service.MenuItemService
+import com.comname.cafecrm.service.CartItemService
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -23,168 +23,151 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(MenuItemController::class, excludeAutoConfiguration = [SecurityAutoConfiguration::class])
-class MenuItemControllerTest : BaseControllerTest() {
+@WebMvcTest(CartItemController::class, excludeAutoConfiguration = [SecurityAutoConfiguration::class])
+class CartItemControllerTest : BaseControllerTest() {
 
     @MockBean
-    private lateinit var menuItemService: MenuItemService
+    private lateinit var cartItemService: CartItemService
 
     @Test
     fun `create - happy path`() {
         val id = 3L
 
-        whenever(menuItemService.create()).thenReturn(id)
+        whenever(cartItemService.create()).thenReturn(id)
 
         val result = objectMapper.readValue<IdDto>(
-            mockMvc.perform(post("$API_PREFIX/menu-items"))
+            mockMvc.perform(post("$API_PREFIX/cart-items"))
                 .andExpect(status().isCreated)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn().response.contentAsByteArray
         )
 
         assertEquals(id.toDto(), result)
-        verify(menuItemService).create()
+        verify(cartItemService).create()
     }
 
     @Test
     fun `create - fail - not persisted`() {
-        val expectedMessage = "MenuItemEntity is not persisted"
+        val expectedMessage = "CartItemEntity is not persisted"
 
-        whenever(menuItemService.create()).thenThrow(EntityNotPersistedException(MenuItemEntity::class))
+        whenever(cartItemService.create()).thenThrow(EntityNotPersistedException(CartItemEntity::class))
 
         val result = objectMapper.readValue<ErrorInfo>(
-            mockMvc.perform(post("$API_PREFIX/menu-items"))
+            mockMvc.perform(post("$API_PREFIX/cart-items"))
                 .andExpect(status().isInternalServerError)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn().response.contentAsByteArray
         )
 
         assertEquals(expectedMessage, result.message)
-        verify(menuItemService).create()
+        verify(cartItemService).create()
     }
 
     @Test
     fun `get - happy path`() {
         val id = 3L
-        val menuItem = menuItem(id = id)
+        val cartItem = cartItem(id = id)
 
-        whenever(menuItemService.get(id)).thenReturn(menuItem)
+        whenever(cartItemService.get(id)).thenReturn(cartItem)
 
-        val result = objectMapper.readValue<MenuItemDto>(
-            mockMvc.perform(get("$API_PREFIX/menu-items/$id"))
+        val result = objectMapper.readValue<CartItemDto>(
+            mockMvc.perform(get("$API_PREFIX/cart-items/$id"))
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn().response.contentAsByteArray
         )
 
-        assertEquals(menuItem.toDto(), result)
-        verify(menuItemService).get(id)
+        assertEquals(cartItem.toDto(), result)
+        verify(cartItemService).get(id)
     }
 
     @Test
     fun `get - fail - not found`() {
         val id = 3L
-        val expectedMessage = "MenuItemEntity with id = $id is not found"
+        val expectedMessage = "CartItemEntity with id = $id is not found"
 
-        whenever(menuItemService.get(id)).thenThrow(EntityNotFoundException(MenuItemEntity::class, id))
+        whenever(cartItemService.get(id)).thenThrow(EntityNotFoundException(CartItemEntity::class, id))
 
         val result = objectMapper.readValue<ErrorInfo>(
-            mockMvc.perform(get("$API_PREFIX/menu-items/$id"))
+            mockMvc.perform(get("$API_PREFIX/cart-items/$id"))
                 .andExpect(status().isNotFound)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn().response.contentAsByteArray
         )
 
         assertEquals(expectedMessage, result.message)
-        verify(menuItemService).get(id)
-    }
-
-
-    @Test
-    fun `getAll - happy path`() {
-        val menuItemList = listOf(menuItem(), menuItem())
-
-        whenever(menuItemService.getAll()).thenReturn(menuItemList)
-
-        val result = objectMapper.readValue<List<MenuItemDto>>(
-            mockMvc.perform(get("$API_PREFIX/menu-items"))
-                .andExpect(status().isOk)
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andReturn().response.contentAsByteArray
-        )
-
-        assertEquals(menuItemList.map { it.toDto() }, result)
+        verify(cartItemService).get(id)
     }
 
     @Test
     fun `update - happy path`() {
         val id = 3L
-        val menuItem = menuItem(id = id)
-        val updatedMenuItem = menuItem.copy(name = "new")
+        val cartItem = cartItem(id = id)
+        val updatedCartItem = cartItem.copy(quantity = 3)
 
-        whenever(menuItemService.update(id, menuItem)).thenReturn(updatedMenuItem)
+        whenever(cartItemService.update(id, cartItem)).thenReturn(updatedCartItem)
 
-        val result = objectMapper.readValue<MenuItemDto>(
+        val result = objectMapper.readValue<CartItemDto>(
             mockMvc.perform(
-                patch("$API_PREFIX/menu-items/$id")
+                patch("$API_PREFIX/cart-items/$id")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsBytes(menuItem.toDto()))
+                    .content(objectMapper.writeValueAsBytes(cartItem.toDto()))
             )
                 .andExpect(status().isOk)
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn().response.contentAsByteArray
         )
 
-        assertEquals(updatedMenuItem.toDto(), result)
-        verify(menuItemService).update(id, menuItem)
+        assertEquals(updatedCartItem.toDto(), result)
+        verify(cartItemService).update(id, cartItem)
     }
 
     @Test
     fun `update - fail - not found`() {
         val id = 3L
-        val menuItem = menuItem(id = id)
-        val expectedMessage = "MenuItemEntity with id = $id is not found"
+        val cartItem = cartItem(id = id)
+        val expectedMessage = "CartItemEntity with id = $id is not found"
 
-        whenever(menuItemService.update(id, menuItem)).thenThrow(EntityNotFoundException(MenuItemEntity::class, id))
+        whenever(cartItemService.update(id, cartItem)).thenThrow(EntityNotFoundException(CartItemEntity::class, id))
 
         val result = objectMapper.readValue<ErrorInfo>(
             mockMvc.perform(
-                patch("$API_PREFIX/menu-items/$id")
+                patch("$API_PREFIX/cart-items/$id")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsBytes(menuItem.toDto())))
+                    .content(objectMapper.writeValueAsBytes(cartItem.toDto())))
                 .andExpect(status().isNotFound)
                 .andReturn().response.contentAsByteArray
         )
 
         assertEquals(expectedMessage, result.message)
-        verify(menuItemService).update(id, menuItem)
+        verify(cartItemService).update(id, cartItem)
     }
 
     @Test
     fun `delete - happy path`() {
         val id = 3L
 
-        mockMvc.perform(delete("$API_PREFIX/menu-items/$id"))
+        mockMvc.perform(delete("$API_PREFIX/cart-items/$id"))
             .andExpect(status().isNoContent)
 
-        verify(menuItemService).delete(id)
+        verify(cartItemService).delete(id)
     }
 
     @Test
     fun `delete - fail - not found`() {
         val id = 3L
-        val expectedMessage = "MenuItemEntity with id = $id is not found"
+        val expectedMessage = "CartItemEntity with id = $id is not found"
 
-        whenever(menuItemService.delete(id)).thenThrow(EntityNotFoundException(MenuItemEntity::class, id))
+        whenever(cartItemService.delete(id)).thenThrow(EntityNotFoundException(CartItemEntity::class, id))
 
         val result = objectMapper.readValue<ErrorInfo>(
-            mockMvc.perform(delete("$API_PREFIX/menu-items/$id"))
+            mockMvc.perform(delete("$API_PREFIX/cart-items/$id"))
                 .andExpect(status().isNotFound)
                 .andReturn().response.contentAsByteArray
         )
 
         assertEquals(expectedMessage, result.message)
-        verify(menuItemService).delete(id)
+        verify(cartItemService).delete(id)
     }
 
 }

@@ -1,5 +1,6 @@
 package com.comname.cafecrm.domain
 
+import com.comname.cafecrm.domain.entity.CartItemEntity
 import com.comname.cafecrm.domain.entity.MenuItemEntity
 
 fun menuItemEntity(
@@ -19,6 +20,17 @@ fun menuItemEntity(
     weight = weight,
     price = price,
     image = image
+).apply {
+    this.id = id
+}
+
+fun cartItemEntity(
+    id: Long? = 110L,
+    menuItem: MenuItemEntity? = menuItemEntity(),
+    quantity: Long? = 1
+) = CartItemEntity(
+    menuItem = menuItem,
+    quantity = quantity
 ).apply {
     this.id = id
 }
