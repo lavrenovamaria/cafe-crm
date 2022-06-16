@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: cafe-crm
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/cafe-crm
+    username: dev
+    password: password
+  liquibase:
+    enabled: true
+
+paths:
+  api:
+    version: 1
+    prefix: /api/v${paths.api.version}

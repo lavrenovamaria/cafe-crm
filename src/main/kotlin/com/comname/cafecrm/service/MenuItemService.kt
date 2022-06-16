@@ -1,7 +1,7 @@
 package com.comname.cafecrm.service
 
-import com.comname.cafecrm.domain.converter.toModel
 import com.comname.cafecrm.domain.entity.MenuItemEntity
+import com.comname.cafecrm.domain.entity.resolver.MenuItemEntityResolver
 import com.comname.cafecrm.domain.model.MenuItem
 import com.comname.cafecrm.exception.EntityNotFoundException
 import com.comname.cafecrm.exception.EntityNotPersistedException
@@ -13,21 +13,23 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional
 class MenuItemService(
-    private val menuItemRepository: MenuItemRepository
+    private val menuItemRepository: MenuItemRepository,
+    private val menuItemEntityResolver: MenuItemEntityResolver
 ) {
 
     fun create() = menuItemRepository.save(MenuItemEntity()).id
         ?: throw EntityNotPersistedException(MenuItemEntity::class)
 
-    fun get(id: Long) = menuItemRepository.findByIdOrNull(id)?.toModel()
-        ?: throw EntityNotFoundException(MenuItemEntity::class, id)
+    fun get(id: Long) = menuItemEntityResolver.toModel(
+        menuItemRepository.findByIdOrNull(id) ?: throw EntityNotFoundException(MenuItemEntity::class, id))
 
-    fun getAll() = menuItemRepository.getAllBy().map { it.toModel() }
+    fun getAll() = menuItemRepository.getAllBy().map { menuItemEntityResolver.toModel(it) }
 
     fun update(id: Long, menuItem: MenuItem) =
-        menuItemRepository
-            .findByIdOrNull(id)
-            ?.merge(menuItem)?.toModel() ?: throw EntityNotFoundException(MenuItemEntity::class, id)
+        menuItemEntityResolver.merge(
+            menuItemRepository.findByIdOrNull(id) ?: throw EntityNotFoundException(MenuItemEntity::class, id),
+            menuItem
+        ).let { menuItemEntityResolver.toModel(it) }
 
     fun delete(id: Long) = menuItemRepository.findByIdOrNull(id)
         .let { entity ->
