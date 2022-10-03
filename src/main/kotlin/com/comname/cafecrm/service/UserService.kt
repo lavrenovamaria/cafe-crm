@@ -23,17 +23,4 @@ class UserService(
     fun get(id: Long) = UserEntityResolver.toModel(
         UserRepository.findByIdOrNull(id) ?: throw EntityNotFoundException(CartItemEntity::class, id))
 
-    fun update(id: Long, cartItem: CartItem) =
-        UserEntityResolver
-            .merge(
-                UserRepository.findByIdOrNull(id) ?: throw EntityNotFoundException(CartItemEntity::class, id),
-                cartItem
-            ).let { UserEntityResolver.toModel(it) }
-
-    fun delete(id: Long) = UserRepository.findByIdOrNull(id)
-        .let { entity ->
-            entity ?: throw EntityNotFoundException(CartItemEntity::class, id)
-            UserRepository.deleteById(id)
-        }
-
 }
