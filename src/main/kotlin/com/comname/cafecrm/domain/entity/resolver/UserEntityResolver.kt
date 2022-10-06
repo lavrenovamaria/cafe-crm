@@ -1,7 +1,9 @@
 package com.comname.cafecrm.domain.entity.resolver
 
 import com.comname.cafecrm.domain.entity.UserEntity
+import com.comname.cafecrm.domain.model.User
 import com.comname.cafecrm.exception.EntityNotFoundException
+import com.comname.cafecrm.repository.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
