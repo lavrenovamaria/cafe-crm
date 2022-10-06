@@ -4,6 +4,7 @@ import com.comname.cafecrm.domain.entity.UserEntity
 import com.comname.cafecrm.domain.model.User
 import com.comname.cafecrm.exception.EntityNotFoundException
 import com.comname.cafecrm.repository.UserRepository
+import liquibase.pro.packaged.it
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
@@ -19,7 +20,6 @@ class UserEntityResolver(
     override fun toEntity(model: User) =
         with(model) {
             UserEntity(
-                quantity = quantity,
                 user = user?.let { userEntityResolver.toEntity(it) }
             )
         }
@@ -28,7 +28,6 @@ class UserEntityResolver(
         with(entity) {
             User(
                 id = id,
-                quantity = quantity,
                 user = user?.let { userEntityResolver.toEntity(it) }
             )
         }
@@ -38,7 +37,6 @@ class UserEntityResolver(
             val newUser = new.user?.id?.let { userId ->
                 userRepository.findByIdOrNull(userId) ?: throw EntityNotFoundException(UserEntity::class, userId)
             }
-            quantity = new.quantity ?: old.quantity
             user = newUser ?: old.user
         }
 
