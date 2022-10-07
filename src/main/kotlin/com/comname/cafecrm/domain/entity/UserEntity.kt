@@ -3,10 +3,10 @@ package com.comname.cafecrm.domain.entity
 import javax.persistence.*
 
 @Entity
-@Table(name = "user")
+@Table(name = "user_item")
 class UserEntity(
-    @Column(name = "id")
-    var name: String? = null,
+    @Column(name = "user")
+    var user: Long? = null,
 ) : BaseEntity<Long>() {
 
     @Id
