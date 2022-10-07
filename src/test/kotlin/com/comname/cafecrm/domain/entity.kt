@@ -2,6 +2,7 @@ package com.comname.cafecrm.domain
 
 import com.comname.cafecrm.domain.entity.CartItemEntity
 import com.comname.cafecrm.domain.entity.MenuItemEntity
+import com.comname.cafecrm.domain.entity.UserEntity
 
 fun menuItemEntity(
     id: Long = 127L,
@@ -31,6 +32,15 @@ fun cartItemEntity(
 ) = CartItemEntity(
     menuItem = menuItem,
     quantity = quantity
+).apply {
+    this.id = id
+}
+
+fun userEntity(
+    id: Long = 1L,
+    user: Long = 1L,
+) = UserEntity(
+    user = user,
 ).apply {
     this.id = id
 }
