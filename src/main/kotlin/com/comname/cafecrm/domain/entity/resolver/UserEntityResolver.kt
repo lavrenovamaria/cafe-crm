@@ -17,13 +17,6 @@ class UserEntityResolver(
     private val userRepository: UserRepository
 ) : Resolver<UserEntity, User>{
 
-//    override fun toEntity(model: User) =
-//        with(model) {
-//            UserEntity(
-//                id = id
-//            )
-//        }
-
     override fun toModel(entity: UserEntity) =
         with(entity) {
             User(
@@ -42,5 +35,4 @@ class UserEntityResolver(
     override fun toEntity(model: User): UserEntity {
         TODO("Not yet implemented")
     }
-
 }
