@@ -3,11 +3,8 @@ package com.comname.cafecrm.domain.entity
 import javax.persistence.*
 
 @Entity
-@Table(name = "user_item")
-class UserEntity(
-    @Column(name = "user")
-    var user: Long? = null,
-) : BaseEntity<Long>() {
+@Table(name = "user")
+class UserEntity() : BaseEntity<Long>() {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator")

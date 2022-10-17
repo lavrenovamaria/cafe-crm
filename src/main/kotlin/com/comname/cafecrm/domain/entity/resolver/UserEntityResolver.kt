@@ -13,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional(propagation = Propagation.MANDATORY)
 class UserEntityResolver(
-    private val userEntityResolver: UserEntityResolver?,//?
-    private val userRepository: UserRepository
 ) : Resolver<UserEntity, User>{
 
     override fun toModel(entity: UserEntity) =
@@ -26,9 +24,6 @@ class UserEntityResolver(
 
     override fun merge(old: UserEntity, new: User) =
         old.apply {
-            val newUser = new.id?.let { userId ->
-                userRepository.findByIdOrNull(userId) ?: throw EntityNotFoundException(UserEntity::class, userId)
-            }
             id = new.id ?: old.id
         }
 

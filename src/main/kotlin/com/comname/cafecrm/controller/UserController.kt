@@ -9,18 +9,17 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("\${paths.api.prefix}/users")
 class UserController(
-    private val userService: UserService
-) : BaseCrudController<UserDto> {
+    private val userService: UserService)  {
 
-    override fun create() = userService.create().toDto()
+    fun create() = userService.create().toDto()
 
-    override fun get(id: Long) = userService.get(id).toDto()
+    fun get(id: Long) = userService.get(id).toDto()
 
-    override fun delete(id: Long) {
+    fun delete(id: Long) {
         TODO("Not yet implemented")
     }
 
-    override fun update(id: Long, dto: UserDto): UserDto {
+    fun update(id: Long, dto: UserDto): UserDto {
         TODO("Not yet implemented")
     }
 
