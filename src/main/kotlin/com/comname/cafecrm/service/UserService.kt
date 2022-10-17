@@ -21,5 +21,4 @@ class UserService(
 
     fun get(id: Long) = UserEntityResolver.toModel(
         UserRepository.findByIdOrNull(id) ?: throw EntityNotFoundException(UserEntity::class, id))
-
 }

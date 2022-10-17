@@ -22,5 +22,4 @@ class UserController(
     fun update(id: Long, dto: UserDto): UserDto {
         TODO("Not yet implemented")
     }
-
 }
